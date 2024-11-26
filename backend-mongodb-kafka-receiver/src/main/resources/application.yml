@@ -1,0 +1,37 @@
+spring:
+  profiles:
+    active: local
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  data:
+    mongodb:
+      uri: mongodb://admin:password@localhost:27017/time_db?authSource=admin
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      groupId: times-1
+    topic: timeTopic
+server:
+  address: 0.0.0.0
+  port: 5050
+
+---
+spring:
+  config:
+    activate:
+      on-profile: container
+  data:
+    mongodb:
+      uri: mongodb://admin:password@mongodb:27017/time_db?authSource=admin
+      authentication-database: admin
+  kafka:
+    bootstrap-servers: broker:9092
+    consumer:
+      groupId: times-1
+    topic: timeTopic
+server:
+  address: 0.0.0.0
+  port: 5050

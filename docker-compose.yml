@@ -1,0 +1,72 @@
+version: '3'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - '3333:3000'
+    networks:
+      - custom_network
+  backend-postgres-kafka-producer:
+    build: ./backend-postgres-kafka-producer
+    container_name: backend-postgres-kafka-producer
+    ports:
+      - '5555:5000'
+    environment:
+      POSTGRES_SERVER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: postgres
+    networks:
+      - custom_network
+  backend-mongodb-kafka-receiver:
+    build: ./backend-mongodb-kafka-receiver
+    container_name: backend-mongodb-kafka-receiver
+    networks:
+      - custom_network
+    environment:
+      - SPRING_PROFILES_ACTIVE=container
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=example
+    networks:
+      - custom_network
+  adminer:
+    image: adminer
+    networks:
+      - custom_network
+    ports:
+      - '8888:8080'
+  broker:
+    image: apache/kafka
+    ports:
+      - '9092:9092'
+    networks:
+      - custom_network
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 3
+  mongodb:
+    image: mongodb/mongodb-community-server  
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - custom_network
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: admin
+      MONGODB_INITDB_ROOT_PASSWORD: password
+      MONGODB_INITDB_DATABASE: time_db
+networks:
+  custom_network:
+    driver: bridge

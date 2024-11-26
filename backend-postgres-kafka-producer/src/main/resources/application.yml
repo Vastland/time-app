@@ -1,0 +1,68 @@
+spring:
+  profiles:
+    active: local
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:postgresql://localhost/time_db
+    username: postgres
+    password: localpass
+    port: 3306
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      topic: timeTopic
+      properties:
+        acks: 1
+        spring:
+          json:
+            add:
+              type:
+                headers: false
+  jpa:
+    generate-ddl: true
+    properties:
+      hibernate:
+        ddl-auto: update
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  address: 0.0.0.0
+  port: 5000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: container
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_SERVER}/${POSTGRES_DB}
+    username: postgres
+    password: example
+    port: 3306
+  kafka:
+    bootstrap-servers: broker:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      topic: timeTopic
+      properties:
+        acks: 1
+        spring:
+          json:
+            add:
+              type:
+                headers: false
+  jpa:
+    generate-ddl: true
+    properties:
+      hibernate:
+        ddl-auto: update
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  address: 0.0.0.0
+  port: 5000
