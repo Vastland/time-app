@@ -1,13 +1,11 @@
 package org.timeapp.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.timeapp.domain.Times;
-import org.timeapp.dto.TimesDto;
 import org.timeapp.service.TimesService;
 
 @EnableKafka

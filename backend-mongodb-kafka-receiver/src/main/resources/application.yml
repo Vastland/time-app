@@ -9,6 +9,8 @@ spring:
   data:
     mongodb:
       uri: mongodb://admin:password@localhost:27017/time_db?authSource=admin
+      authentication-database: admin
+
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
@@ -35,3 +37,9 @@ spring:
 server:
   address: 0.0.0.0
   port: 5050
+
+logging:
+  level:
+    org:
+      mongodb:
+        driver: DEBUG

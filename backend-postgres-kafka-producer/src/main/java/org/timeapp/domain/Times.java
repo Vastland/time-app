@@ -31,4 +31,7 @@ public class Times implements Serializable {
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt = Instant.now();
+
+    @Version
+    private Integer version;
 }

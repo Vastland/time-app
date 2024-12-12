@@ -17,6 +17,10 @@ public class TimesService {
 
 //    @Transactional
     public Times saveTimes(Times times) throws Exception {
-        return timesRepository.save(times);
+        try {
+            return timesRepository.save(times);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
